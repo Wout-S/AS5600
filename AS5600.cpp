@@ -3,6 +3,7 @@
 
 AS5600::AS5600() {
   Wire.begin();
+  Wire.setClock(400000);
 }
 
 uint16_t AS5600::getPosition() {
@@ -78,7 +79,14 @@ uint8_t AS5600::_getRegister(byte register1) {
 uint16_t AS5600::_getRegisters2(byte registerMSB, byte registerLSB) {
   uint16_t _hi=0, _lo=0;
 
-  _hi = _getRegister(registerMSB);
-  _lo = _getRegister(registerLSB);
+  Wire.beginTransmission(_AS5600Address);
+  Wire.write(registerMSB);
+  //Wire.write(registerLSB);
+  Wire.endTransmission(false);
+
+  Wire.requestFrom(_AS5600Address,2,false);
+  while(Wire.available() <= 1);
+    _hi = Wire.read(); // Reads the data from the register
+    _lo = Wire.read();   
   return (_hi<<8) | (_lo);
 }
