@@ -19,7 +19,6 @@ class AS5600
     uint16_t getAngle();
     uint16_t getRawAngle();
     float getScaledAngle();
-    float getScaledAngle2();
 
     uint8_t getStatus();
     uint8_t getGain();
