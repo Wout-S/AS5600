@@ -19,9 +19,8 @@ uint16_t AS5600::getRawAngle() {
 }
 
 float AS5600::getScaledAngle() {
-  int ang_hi = _getRegister(_RAWANGLEAddressMSB);
-  int ang_lo = _getRegister(_RAWANGLEAddressLSB);
-  return ang_hi * 22.5 + ang_lo * 0.087890625;
+  float pos = (float)_getRegisters2(_RAWANGLEAddressMSB,_RAWANGLEAddressLSB)*360/4095;
+  return pos;
 }
 
 uint8_t AS5600::getStatus() {
@@ -81,7 +80,6 @@ uint16_t AS5600::_getRegisters2(byte registerMSB, byte registerLSB) {
 
   Wire.beginTransmission(_AS5600Address);
   Wire.write(registerMSB);
-  //Wire.write(registerLSB);
   Wire.endTransmission(false);
 
   Wire.requestFrom(_AS5600Address,2,false);
