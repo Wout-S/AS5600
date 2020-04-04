@@ -3,7 +3,7 @@
 
 AS5600::AS5600() {
   Wire.begin();
-  Wire.setClock(400000);
+  Wire.setClock(100000);
 }
 
 uint16_t AS5600::getPosition() {
@@ -62,12 +62,16 @@ uint16_t AS5600::getMagnitude() {
 
 uint8_t AS5600::_getRegister(byte register1) {
   uint8_t _b=0;
+  byte requestResult;
 
   Wire.beginTransmission(_AS5600Address);
   Wire.write(register1);
-  Wire.endTransmission();
-
-  Wire.requestFrom(_AS5600Address, 1, 0);
+  requestResult =Wire.endTransmission(false);
+  if (requestResult){
+		Serial.print("I2C error: ");
+		Serial.println(requestResult);
+	}
+  Wire.requestFrom(_AS5600Address, 1, true);
 
   while (Wire.available() == 0) { }
   _b = Wire.read();
@@ -77,12 +81,16 @@ uint8_t AS5600::_getRegister(byte register1) {
 
 uint16_t AS5600::_getRegisters2(byte registerMSB, byte registerLSB) {
   uint16_t _hi=0, _lo=0;
-
+  byte requestResult;
   Wire.beginTransmission(_AS5600Address);
   Wire.write(registerMSB);
-  Wire.endTransmission(false);
-
-  Wire.requestFrom(_AS5600Address,2,false);
+  requestResult = Wire.endTransmission(false);
+   
+  if (requestResult){
+		Serial.print("I2C error: ");
+		Serial.println(requestResult);
+	}
+  Wire.requestFrom(_AS5600Address,2,true);
   while(Wire.available() <= 1);
     _hi = Wire.read(); // Reads the data from the register
     _lo = Wire.read();   
