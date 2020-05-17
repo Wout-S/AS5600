@@ -3,7 +3,7 @@
 
 AS5600::AS5600() {
   Wire.begin();
-  Wire.setClock(100000);
+  // Wire.setClock(100000);
 }
 
 uint16_t AS5600::getPosition() {
@@ -86,10 +86,10 @@ uint16_t AS5600::_getRegisters2(byte registerMSB, byte registerLSB) {
   Wire.write(registerMSB);
   requestResult = Wire.endTransmission(false);
    
-  if (requestResult){
-		Serial.print("I2C error: ");
-		Serial.println(requestResult);
-	}
+  // if (requestResult){
+	// 	Serial.print("I2C error: ");
+	// 	Serial.println(requestResult);
+	// }
   Wire.requestFrom(_AS5600Address,2,true);
   while(Wire.available() <= 1);
     _hi = Wire.read(); // Reads the data from the register
